@@ -25,7 +25,6 @@ with variable Value.**
 ```{r, echo = True}
 hist(fifa$Age)
 hist(fifa$Overall)
-hist(fifa$Potential)
 hist(fifa$Value..in.million.)
 hist(fifa$Vision)
 hist(fifa$Penalties)
