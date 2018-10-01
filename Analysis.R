@@ -21,3 +21,11 @@ pairs(new1)
 
 **Variable Age seems to have a slight negative relationship with variable Value. Variable Overall has a positive relationship
 with variable Value.**
+
+```{r, echo = True}
+hist(fifa$Age)
+hist(fifa$Overall)
+hist(fifa$Potential)
+hist(fifa$Value..in.million.)
+
+```
