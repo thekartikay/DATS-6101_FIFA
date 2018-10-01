@@ -14,3 +14,10 @@ summary(fifa$Potential)
 summary(fifa$Value..in.million.)
 ```
 
+```{r, echo = TRUE}
+new1 <- data.frame(fifa$Age, fifa$Overall, fifa$Value..in.million., fifa$Wage.in.thousands.)
+pairs(new1)
+```
+
+**Variable Age seems to have a slight negative relationship with variable Value. Variable Overall has a positive relationship
+with variable Value.**
