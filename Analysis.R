@@ -14,6 +14,30 @@ summary(fifa$Potential)
 summary(fifa$Value..in.million.)
 ```
 
+**Summary Statistics Table
+
+```{r, echo = TRUE}
+df <- fifa[,c("Age","Overall","Value","Strength","Stamina","Finishing","Penalties","Vision","Acceleration")]
+s_table <- do.call(data.frame, 
+           list(count = apply(df, 2, length),
+                mean = apply(df, 2, mean),
+                std = apply(df, 2, sd),
+                min = apply(df, 2, min),
+                Q25 = apply(df, 2, quantile, probs=0.25),
+                median = apply(df, 2, median),
+                Q75 = apply(df, 2, quantile, probs=0.75),
+                max = apply(df, 2, max)))
+s_table
+```
+
+```{r}
+loadPkg("corrplot")
+corrplot(cor(df), method = "circle", type="upper")
+```
+
+**We find a relatively weak positive correlation between Age and Vision
+
+
 ```{r, echo = TRUE}
 new1 <- data.frame(fifa$Age, fifa$Overall, fifa$Value..in.million., fifa$Wage.in.thousands.)
 pairs(new1)
