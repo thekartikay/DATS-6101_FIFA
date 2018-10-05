@@ -69,6 +69,14 @@ hist(fifa$Strength)
 hist(fifa$Stamina.enduration.)
 hist(fifa$Finishing)
 ```
+
+```{r, echo = True}
+attack <- subset(fifa, fifa$`Player Mentality` == 'attack')
+keeper <- subset(fifa, fifa$`Player Mentality` == 'keeper')
+mid <- subset(fifa, fifa$`Player Mentality` == 'mid')
+defence <- subset(fifa, fifa$`Player Mentality` == 'defence')
+```
+
 #Create ggplot got
 ```{r, echo = T}
 ggplot(data=fifa)+ 
