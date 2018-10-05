@@ -19,14 +19,14 @@ summary(fifa$Value..in.million.)
 ```{r, echo = TRUE}
 df <- fifa[,c("Age","Overall","Value","Strength","Stamina","Finishing","Penalties","Vision","Acceleration")]
 s_table <- do.call(data.frame, 
-           list(count = apply(df, 2, length),
+           lapply(lapply(list(count = apply(df, 2, length),
                 mean = apply(df, 2, mean),
                 std = apply(df, 2, sd),
                 min = apply(df, 2, min),
                 Q25 = apply(df, 2, quantile, probs=0.25),
                 median = apply(df, 2, median),
                 Q75 = apply(df, 2, quantile, probs=0.75),
-                max = apply(df, 2, max)))
+                max = apply(df, 2, max)),round,2), format, scientific=FALSE))
 s_table
 ```
 
