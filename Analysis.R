@@ -69,6 +69,7 @@ hist(fifa$Strength)
 hist(fifa$Stamina.enduration.)
 hist(fifa$Finishing)
 ```
+#Create ggplot got
 ```{r, echo = T}
 ggplot(data=fifa)+ 
   geom_boxplot(mapping = aes(x=fifa$Age, y=fifa$Vision, color=fifa$`Player Mentality`)) +
