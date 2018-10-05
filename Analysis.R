@@ -46,6 +46,18 @@ pairs(new1)
 **Variable Age seems to have a slight negative relationship with variable Value. Variable Overall has a positive relationship
 with variable Value.**
 
+```{r, echo = TRUE}
+age25less <- subset(fifa, fifa$Age < 25)
+age25bigger <- subset(fifa, fifa$Age >=25)
+t.test(age25less$Vision, age25bigger$Vision, alternative = "less")
+
+contable = table(age25less$Vision, age25less$Vision)
+chisq.test(contable)
+
+contable = table(age25bigger$Vision, age25lbigger$Vision)
+chisq.test(contable)
+```
+
 ```{r, echo = True}
 hist(fifa$Age)
 hist(fifa$Overall)
@@ -57,3 +69,9 @@ hist(fifa$Strength)
 hist(fifa$Stamina.enduration.)
 hist(fifa$Finishing)
 ```
+```{r, echo = T}
+ggplot(data=fifa)+ 
+  geom_boxplot(mapping = aes(x=fifa$Age, y=fifa$Vision, color=fifa$`Player Mentality`)) +
+  labs(title="Age vs Vision by Player Mentality",x="Age", y = "Vision")
+```
+
