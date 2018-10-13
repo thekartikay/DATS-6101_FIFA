@@ -124,7 +124,7 @@ contable = table(defence$Age, defence$Vision)
 chisq.test(contable)
 ```
 
-#Slide 18
+#Slide 19
 ```{r, echo = True}
 age25lessattack <- subset(attack, attack$Age < 25)
 age25lesskeeper <- subset(keeper, keeper$Age < 25)
