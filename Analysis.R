@@ -131,12 +131,13 @@ age25lesskeeper <- subset(keeper, keeper$Age < 25)
 age25lessmid <- subset(mid, mid$Age < 25)
 age25lessdefence <- subset(defence, defence$Age < 25)
 
-t.test(age25lessattack$Vision, age25lesskeeper$Vision, alternative = "less")
-t.test(age25lesskeeper$Vision, age25lessmid$Vision, alternative = "less")
-t.test(age25lessmid$Vision, age25lessdefence$Vision, alternative = "less")
-t.test(age25lessattack$Vision, age25lessdefence$Vision, alternative = "less")
-t.test(age25lesskeeper$Vision, age25lessdefence$Vision, alternative = "less")
-t.test(age25lessattack$Vision, age25lessmid$Vision, alternative = "less")
+t.test(age25lessattack$Vision, age25lesskeeper$Vision)
+t.test(age25lesskeeper$Vision, age25lessmid$Vision)
+t.test(age25lessmid$Vision, age25lessdefence$Vision)
+t.test(age25lessattack$Vision, age25lessdefence$Vision)
+t.test(age25lesskeeper$Vision, age25lessdefence$Vision)
+t.test(age25lessattack$Vision, age25lessmid$Vision)
+
 
 ```
 
