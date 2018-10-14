@@ -28,7 +28,7 @@ summary(fifa$Value..in.million.)
 #Slide 5
 **Summary Statistics Table
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 df <- fifa[,c("Age","Overall","Value","Strength","Stamina","Finishing","Penalties","Vision","Acceleration")]
 s_table <- do.call(data.frame, 
            lapply(lapply(list(count = apply(df, 2, length),
