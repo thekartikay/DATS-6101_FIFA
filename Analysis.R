@@ -149,7 +149,7 @@ cor(defence$Age, defence$Vision)
 
 
 #Slide 17
-```{r, echo = True}
+```{r, echo = TRUE}
 contable = table(attack$Age, attack$Vision)
 chisq.test(contable)
 
