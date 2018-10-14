@@ -141,5 +141,22 @@ t.test(age25lessattack$Vision, age25lessmid$Vision)
 
 ```
 
+#Slide 20
+library("corrplot")
+data <- read.csv('cleanedFifa.csv',header = TRUE)
+#Attack
+att_data <- data[data$Player.Mentality == 'attack',]
+att_data <- subset(att_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+corrplot(cor(att_data), method = "circle", type="upper")
+
+#Mid
+mid_data <- data[data$Player.Mentality == 'mid',]
+mid_data <- subset(mid_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+corrplot(cor(mid_data), method = "circle", type="upper")
+
+#Defence
+def_data <- data[data$Player.Mentality == 'defence',]
+def_data <- subset(def_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+corrplot(cor(def_data), method = "circle", type="upper")
 
 
