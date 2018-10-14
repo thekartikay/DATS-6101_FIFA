@@ -69,7 +69,7 @@ boxplot(df$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
 ```
 
 #Slide 9 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 library(ggplot2)
 ggplot(data=df)+ 
   geom_boxplot(mapping = aes(y=df$Age, x=fifa$Player.Mentality, color=fifa$Player.Mentality)) +
