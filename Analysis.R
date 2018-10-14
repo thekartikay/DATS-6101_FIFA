@@ -93,7 +93,7 @@ ggplot(df, aes(x=Age, y=Vision,
   scale_shape_discrete(name ="Age", labels=c("< 25", "25 <= Age <35",">= 35"))
 ```
 
-```{r, echo=True}
+```{r, echo=TRUE}
 cor(df$Age, df$Vision)
 ```
 
