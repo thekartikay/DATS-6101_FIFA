@@ -1,5 +1,10 @@
 #Analysis
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+loadPkg = function(x) { if (!require(x,character.only=T, quietly =T)) { install.packages(x,dep=T,repos="http://cran.us.r-project.org"); if(!require(x,character.only=T)) stop("Package not found") } }
+```
+
 #Slide 4
 #Summary of the overall data
 ```{r, echo = TRUE}
@@ -34,80 +39,112 @@ s_table <- do.call(data.frame,
 s_table
 ```
 
-
 #Slide 6
-```{r}
-loadPkg("corrplot")
+
+```{r, echo = FALSE}
+library("corrplot")
+```
+
+```{r, echo = TRUE}
 corrplot(cor(df), method = "circle", type="upper")
 ```
 
 **We find a relatively weak positive correlation between Age and Vision
 
-
 **Variable Age seems to have a slight negative relationship with variable Value. Variable Overall has a positive relationship
 with variable Value.**
 
 #Slide 7
-```{r, echo = True}
-hist(fifa$Age, xlab = 'Age', main = 'Age', col = 'lightpink')
-boxplot(fifa$Age, xlab = 'Age', main = 'Age', col = 'lightpink')
+```{r, echo = TRUE}
+hist(df$Age, xlab = 'Age', main = 'Age', col = 'lightpink')
+boxplot(df$Age, xlab = 'Age', main = 'Age', col = 'lightpink')
 ```
 #Slide 8
-```{r, echo = True}
-hist(fifa$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
-boxplot(fifa$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
+```{r, echo = TRUE}
+hist(df$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
+boxplot(df$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
 ```
 
 #Slide 9 
-```{r, echo = True}
-ggplot(data=fifa)+ 
-  geom_boxplot(mapping = aes(y=fifa$Age, x=fifa$`Player Mentality`, color=fifa$`Player Mentality`)) +
+```{r, echo = TRUE}
+library(ggplot2)
+ggplot(data=df)+ 
+  geom_boxplot(mapping = aes(y=df$Age, x=fifa$Player.Mentality, color=fifa$Player.Mentality)) +
   labs(title="Age by Player Mentality",y="Age", x = "Player Mentality")
 
-ggplot(data=fifa)+ 
-  geom_boxplot(mapping = aes(y=fifa$Vision, x=fifa$`Player Mentality`, color=fifa$`Player Mentality`)) +
+ggplot(data=df)+ 
+  geom_boxplot(mapping = aes(y=df$Vision, x=fifa$Player.Mentality, color=fifa$Player.Mentality)) +
   labs(title="Vision by Player Mentality",y="Vision", x = "Player Mentality")
 ```
 
-#Slide 14 & 15
+#Slide 13
 
-```{r, echo = True}
-age25less <- subset(fifa, fifa$Age < 25)
-age25to35 <- subset(fifa, fifa$Age >24 & fifa$Age <35)
-age35bigger <- subset(fifa, fifa$Age >=35)
+```{r, echo=FALSE}
+ggplot(df, aes(x=Age, y=Vision, 
+               color=ifelse(Age < 25,"< 25", 
+                            ifelse(Age >= 25 & Age < 35, "25 <= Age <35", ">= 35")), 
+               shape=ifelse(Age < 25,"< 25", 
+                            ifelse(Age >= 25 & Age < 35, "25 <= Age <35", ">=35")))) +  
+  geom_point() + 
+  ggtitle("Age vs Vision") + 
+  scale_colour_discrete(name ="Age", labels=c("< 25", "25 <= Age <35",">= 35")) +  
+  scale_shape_discrete(name ="Age", labels=c("< 25", "25 <= Age <35",">= 35"))
+```
 
+```{r, echo=True}
+cor(df$Age, df$Vision)
+```
+
+#Slide 14
+
+```{r, echo = FALSE}
+loadPkg("MASS")
+age25less <- subset(df, Age < 25)
+age25to35 <- subset(df, Age >= 25 & Age < 35)
+age35bigger <- subset(df, Age >= 35)
+```
+
+**We subset Age into 3 ranges.
+
+```{r, echo = TRUE}
 contable = table(age25less$Age, age25less$Vision)
-chisq.test(contable)
-
-contable = table(age35bigger$Age, age35bigger$Vision)
 chisq.test(contable)
 
 contable = table(age25to35$Age, age25to35$Vision)
 chisq.test(contable)
 
+contable = table(age35bigger$Age, age35bigger$Vision)
+chisq.test(contable)
+```
+
+**We perform chi-square tests to test the independence of the variables Age and Vision for the 3 Age subsets.
+
+#Slide 15
+
+```{r, echo = TRUE}
 t.test(age25less$Vision, age25to35$Vision, alternative = "less")
 t.test(age25less$Vision, age35bigger$Vision, alternative = "less")
 t.test(age25to35$Vision, age35bigger$Vision, alternative = "less")
-
 ```
 
+**We perform t-tests comparing the difference in means between Vision across the different Age subsets.
 
 #Slide 16
-```{r, echo = T}
-ggplot(data=fifa)+ 
-  geom_boxplot(mapping = aes(x=fifa$Age, y=fifa$Vision, color=fifa$`Player Mentality`)) +
-  labs(title="Age vs Vision by Player Mentality",x="Age", y = "Vision")
+```{r, echo = FALSE}
+attack <- subset(fifa, Player.Mentality == 'attack')
+keeper <- subset(fifa, Player.Mentality == 'keeper')
+mid <- subset(fifa, Player.Mentality == 'mid')
+defence <- subset(fifa, Player.Mentality == 'defence')
+```
 
-attack <- subset(fifa, fifa$`Player Mentality` == 'attack')
-keeper <- subset(fifa, fifa$`Player Mentality` == 'keeper')
-mid <- subset(fifa, fifa$`Player Mentality` == 'mid')
-defence <- subset(fifa, fifa$`Player Mentality` == 'defence')
-
+```{r, echo = TRUE}
 cor(attack$Age, attack$Vision)
 cor(keeper$Age, keeper$Vision)
 cor(mid$Age, mid$Vision)
 cor(defence$Age, defence$Vision)
 ```
+
+
 
 #Slide 17
 ```{r, echo = True}
@@ -124,39 +161,42 @@ contable = table(defence$Age, defence$Vision)
 chisq.test(contable)
 ```
 
-#Slide 19
-```{r, echo = True}
-age25lessattack <- subset(attack, attack$Age < 25)
-age25lesskeeper <- subset(keeper, keeper$Age < 25)
-age25lessmid <- subset(mid, mid$Age < 25)
-age25lessdefence <- subset(defence, defence$Age < 25)
+**Perform chi-square tests to test independence of the variables Age and Vision for each player position.
 
+#Slide 19
+```{r, echo = FALSE}
+age25lessattack <- subset(attack, Age < 25)
+age25lesskeeper <- subset(keeper, Age < 25)
+age25lessmid <- subset(mid, Age < 25)
+age25lessdefence <- subset(defence, Age < 25)
+```
+
+```{r, echo = TRUE}
 t.test(age25lessattack$Vision, age25lesskeeper$Vision)
 t.test(age25lesskeeper$Vision, age25lessmid$Vision)
 t.test(age25lessmid$Vision, age25lessdefence$Vision)
 t.test(age25lessattack$Vision, age25lessdefence$Vision)
 t.test(age25lesskeeper$Vision, age25lessdefence$Vision)
 t.test(age25lessattack$Vision, age25lessmid$Vision)
-
-
 ```
 
+**We perform t-tests to compare mean Vision for player position of players with age less than 25.
+
 #Slide 20
-library("corrplot")
-data <- read.csv('cleanedFifa.csv',header = TRUE)
-#Attack
-att_data <- data[data$Player.Mentality == 'attack',]
-att_data <- subset(att_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+
+```{r, echo = FALSE}
+att_data <- subset(attack, select= -c(Name, Nationality, Club,Player.Mentality,ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
 corrplot(cor(att_data), method = "circle", type="upper")
+```
 
-#Mid
-mid_data <- data[data$Player.Mentality == 'mid',]
-mid_data <- subset(mid_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+```{r, echo = FALSE}
+mid_data <- subset(mid, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
 corrplot(cor(mid_data), method = "circle", type="upper")
+```
 
-#Defence
-def_data <- data[data$Player.Mentality == 'defence',]
-def_data <- subset(def_data, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
+```{r, echo = FALSE}
+def_data <- subset(defence, select= -c(Name, Nationality, Club,Player.Mentality, ID,GK.diving,GK.handling,GK.kicking,Potential,Special,GK.positioning,GK.reflexes))
 corrplot(cor(def_data), method = "circle", type="upper")
+```
 
 
