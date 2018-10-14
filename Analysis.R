@@ -7,9 +7,11 @@ loadPkg = function(x) { if (!require(x,character.only=T, quietly =T)) { install.
 
 #Slide 4
 #Summary of the overall data
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 fifa <- read_csv("~/Desktop/fifa.csv")
-summary(fifa)
+```
+
+```{r, echo = TRUE}
 str(fifa)
 ```
 
