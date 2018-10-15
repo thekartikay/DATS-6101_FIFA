@@ -147,11 +147,11 @@ cor(mid$Age, mid$Vision)
 cor(defence$Age, defence$Vision)
 ```
 
-```{r, echo =True}
+```{r, echo = FALSE}
 library(mosaic)
-ggplot(data=fifa)+ 
-  geom_point(mapping = aes(x = fifa$Age, y=fifa$Vision, color=fifa$Age)) + 
-  facet_wrap(~fifa$`Player Mentality`) +
+ggplot(data=df)+ 
+  geom_point(mapping = aes(x = Age, y=Vision, color=Age)) + 
+  facet_wrap(~fifa$Player.Mentality) +
   labs(x = 'Age', y = 'Vision', colour = 'Age' ) + theme_dark()
 ```
 
