@@ -90,8 +90,8 @@ ggplot(df, aes(x=Age, y=Vision,
                             ifelse(Age >= 25 & Age < 35, "25 <= Age <35", ">=35")))) +  
   geom_point() + 
   ggtitle("Age vs Vision") + 
-  scale_colour_discrete(name ="Age", labels=c("< 25", "25 <= Age <35",">= 35")) +  
-  scale_shape_discrete(name ="Age", labels=c("< 25", "25 <= Age <35",">= 35"))
+  scale_colour_discrete(name ="Age", labels=c("< 25",">= 35", "25 <= Age <35")) +  
+  scale_shape_discrete(name ="Age", labels=c("< 25",">= 35", "25 <= Age <35"))
 ```
 
 ```{r, echo=TRUE}
