@@ -122,6 +122,27 @@ chisq.test(contable)
 
 **We perform chi-square tests to test the independence of the variables Age and Vision for the 3 Age subsets.
 
+```{r, echo = FALSE}
+fit1 <- lm(age25less$Vision ~ age25less$Age, data = df)
+summary(fit1)
+plot(age25less$Age, age25less$Vision, xlab = "Age (<25)", ylab = "Vision")
+abline(fit1)
+```
+
+```{r, echo = FALSE}
+fit2 <- lm(age25to35$Vision ~ age25to35$Age, data = df)
+summary(fit2)
+plot(age25to35$Age, age25to35$Vision, xlab = "Age (25 <= Age < 35)", ylab = "Vision")
+abline(fit2)
+```
+
+```{r, echo = FALSE}
+fit3 <- lm(age35bigger$Vision ~ age35bigger$Age, data = df)
+summary(fit3)
+plot(age35bigger$Age, age35bigger$Vision, xlab = "Age (>= 35)", ylab = "Vision")
+abline(fit3)
+```
+
 #Slide 15
 
 ```{r, echo = TRUE}
