@@ -98,6 +98,14 @@ ggplot(df, aes(x=Age, y=Vision,
 cor(df$Age, df$Vision)
 ```
 
+```{r, echo=FALSE}
+paste("Original Dataset Correlation: ", round(cor(df$Age, df$Vision),2))
+paste("Attack Correlation: ", round(cor(attack$Age, attack$Vision),2))
+paste("Goalkeeper Correlation: ", round(cor(keeper$Age, keeper$Vision),2))
+paste("Midfield Correlation: ", round(cor(mid$Age, mid$Vision),2))
+paste("Defence Correlation: ", round(cor(defence$Age, defence$Vision),2))
+```
+
 #Slide 14
 
 ```{r, echo = FALSE}
