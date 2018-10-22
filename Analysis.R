@@ -180,10 +180,8 @@ library(mosaic)
 ggplot(data=df)+ 
   geom_point(mapping = aes(x = Age, y=Vision, color=Age)) + 
   facet_wrap(~fifa$Player.Mentality) +
-  labs(x = 'Age', y = 'Vision', colour = 'Age' ) + theme_dark()
+  labs(x = 'Age', y = 'Vision', colour = 'Age' ) + theme_dark() + theme(axis.text=element_text(size=12))
 ```
-
-
 
 #Slide 17
 ```{r, echo = TRUE}
