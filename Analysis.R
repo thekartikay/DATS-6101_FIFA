@@ -73,11 +73,10 @@ boxplot(df$Vision, xlab = 'Vision', main = 'Vision', col = 'lightgreen')
 library(ggplot2)
 ggplot(data=df)+ 
   geom_boxplot(mapping = aes(y=df$Age, x=fifa$Player.Mentality, color=fifa$Player.Mentality)) +
-  labs(title="Age by Player Mentality",y="Age", x = "Player Mentality")
-
+  labs(title="Age by Player Mentality",y="Age", x = "Player Mentality") + theme(axis.text=element_text(size=12))
 ggplot(data=df)+ 
   geom_boxplot(mapping = aes(y=df$Vision, x=fifa$Player.Mentality, color=fifa$Player.Mentality)) +
-  labs(title="Vision by Player Mentality",y="Vision", x = "Player Mentality")
+  labs(title="Vision by Player Mentality",y="Vision", x = "Player Mentality") + theme(axis.text=element_text(size=12))
 ```
 
 #Slide 13
