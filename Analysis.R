@@ -8,7 +8,8 @@ loadPkg = function(x) { if (!require(x,character.only=T, quietly =T)) { install.
 #Slide 4
 #Summary of the overall data
 ```{r, echo = FALSE}
-fifa <- read_csv("~/Desktop/fifa.csv")
+library("readxl")
+fifa <- read.csv("~/Desktop/fifa.csv")
 data <- fifa[,c("Age","Overall","Value","Strength","Stamina","Finishing","Penalties","Vision","Acceleration","Player.Mentality")]
 ```
 
