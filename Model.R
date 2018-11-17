@@ -51,8 +51,8 @@ def_data <- fifa[,c('Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'A
 
 ```{r, echo = FALSE}
 #create target variable from encoded Player Mentality variable
-def_data$target[fifa$Player.Mentality=='defence'] <- 1
-def_data$target[fifa$Player.Mentality!='defence'] <- 0
+def_data$target <- ifelse(def_data$Player.Mentality == "defence",TRUE,FALSE)
+def_data$target = factor(def_data$target)
 #delete Player Mentality column
 def_data$Player.Mentality <- NULL
 ```
