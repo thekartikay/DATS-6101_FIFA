@@ -36,6 +36,65 @@ for (kv in 2:11) {
 #The best value of k is 6-7, this k value yields a good accuracy of 93.14%
 
 
+##Defense
+
+```{r, echo=FALSE}
+library("readxl")
+#read in fifa csv file
+fifa <- read.csv("~/Desktop/fifa.csv")
+```
+
+```{r, echo=FALSE}
+#select variables of interest
+def_data <- fifa[,c('Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'Agility', 'Balance', 'Ball.control', 'Composure', 'Crossing', 'Curve', 'Dribbling',  'Free.kick.accuracy', 'Heading.accuracy', 'Interceptions', 'Long.passing', 'Long.shots', 'Marking',  'Positioning', 'Reactions', 'Short.passing', 'Shot.power', 'Sliding.tackle', 'Sprint.speed', 'Stamina', 'Standing.tackle', 'Strength', 'Vision', 'Volleys', 'Player.Mentality')]
+```
+
+```{r, echo = FALSE}
+#create target variable from encoded Player Mentality variable
+def_data$target[fifa$Player.Mentality=='defence'] <- 1
+def_data$target[fifa$Player.Mentality!='defence'] <- 0
+#delete Player Mentality column
+def_data$Player.Mentality <- NULL
+```
+
+```{r, echo=FALSE}
+loadPkg("FNN")
+#scale all variables, excluding target
+scaled_fifa <- as.data.frame(scale(def_data[1:29], center = TRUE, scale = TRUE))
+scaled_fifa$target <- def_data$target
+set.seed(1000)
+fifa_sample <- sample(2, nrow(scaled_fifa), replace=TRUE, prob=c(0.75, 0.25))
+#create test/train outputs
+fifa_training <- scaled_fifa[fifa_sample==1, 1:ncol(scaled_fifa)-1]
+fifa_test <- scaled_fifa[fifa_sample==2, 1:ncol(scaled_fifa)-1]
+```
+
+```{r}
+#create y test/train variables
+fifa.trainLabels <- scaled_fifa[fifa_sample==1, 30]
+fifa.testLabels <- scaled_fifa[fifa_sample==2, 30]
+```
+
+```{r, echo=FALSE}
+loadPkg("gmodels")
+#test model with k=6
+fifa_pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k=6)
+IRISPREDCross <- CrossTable(fifa.testLabels, fifa_pred, prop.chisq = FALSE)
+```
+
+```{r, echo=FALSE}
+#find best k
+for (k in 1:15) {
+  pred <- knn(train = X_train, test = X_test, cl=y_train, k=k)
+  Cross <- CrossTable(y_test, pred, prop.chisq = FALSE)
+  #calculate total accuracy by summing cell table proportions for correctly predicted class labels, then
+  #multiplying by 100 to get %
+  print(paste("k = ",k))
+  print( paste("Total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2])*100, 2),"%"   ) )
+}
+```
+#k=14 has the highest accuracy, at 95.26%
+
 ##Goal Keeper
 
 
