@@ -201,6 +201,26 @@ pR2(lmgoalkeeper)
 #this is coder's comment
 detach("package:pscl", unload = T)
 ```
+#If I try knn selected models
+
+```{r, ehco =F}
+loadPkg(FNN)
+loadPkg(gmodels)
+```
+
+
+```
+scaled_selectedfifa <- as.data.frame(scale(selectedfifa[1:12], center = TRUE, scale = TRUE))
+sample <- sample(2, nrow(scaled_selectedfifa), replace=TRUE, prob=c(0.8, 0.2))
+scaled_training <- scaled_selectedfifa[sample==1,1:12]
+scaled_test <- scaled_selectedfifa[sample==2,1:12]
+fifa.trainLabels <- selectedfifa[sample==1, 13]
+fifa.testLabels <- selectedfifa[sample==2, 13]
+pred <- knn(train =scaled_training, test = scaled_test, cl=fifa.trainLabels, k=5)
+predCross <- CrossTable(fifa.testLabels, pred, prop.chisq = FALSE)
+```
+**The prediction is almost perfect.**
+
 
 
 
