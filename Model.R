@@ -106,7 +106,7 @@ for (k in 1:15) {
   print(paste("Accuracy =  ",round((Cross$prop.tbl[1,1]+Cross$prop.tbl[2,2]),2)))
 }
 ```
-#k=3 has the highest accuracy, at 95%
+#k=6 or 7 have the highest accuracy, at 95%
 
 ##Goal Keeper
 
