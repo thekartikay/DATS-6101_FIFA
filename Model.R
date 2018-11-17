@@ -59,7 +59,7 @@ def_data$Player.Mentality <- NULL
 
 ```{r, echo=FALSE}
 loadPkg("leaps")
-reg.best <- regsubsets(Overall~., data = def_data, nvmax = 10)
+reg.best <- regsubsets(target~., data = def_data, nvmax = 10, method="exhaustive")
 plot(reg.best, scale = "adjr2", main = "Adjusted R^2")
 plot(reg.best, scale = "bic", main = "BIC")
 plot(reg.best, scale = "Cp", main = "Cp")
