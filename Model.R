@@ -58,10 +58,23 @@ def_data$Player.Mentality <- NULL
 ```
 
 ```{r, echo=FALSE}
+loadPkg("leaps")
+reg.best <- regsubsets(Overall~., data = def_data, nvmax = 10)
+plot(reg.best, scale = "adjr2", main = "Adjusted R^2")
+plot(reg.best, scale = "bic", main = "BIC")
+plot(reg.best, scale = "Cp", main = "Cp")
+summary(reg.best)
+```
+
+```{r}
+def_best <- def_data[,c('Age', 'Potential', 'Special', 'Balance', 'Free.kick.accuracy', 'Long.shots', 'Positioning', 'Reactions', 'Sliding.tackle', 'target')]
+```
+
+```{r, echo=FALSE}
 loadPkg("FNN")
 #scale all variables, excluding target
-scaled_fifa <- as.data.frame(scale(def_data[1:29], center = TRUE, scale = TRUE))
-scaled_fifa$target <- def_data$target
+scaled_fifa <- as.data.frame(scale(def_best[1:9], center = TRUE, scale = TRUE))
+scaled_fifa$target <- def_best$target
 set.seed(1000)
 fifa_sample <- sample(2, nrow(scaled_fifa), replace=TRUE, prob=c(0.75, 0.25))
 #create test/train outputs
@@ -71,8 +84,8 @@ fifa_test <- scaled_fifa[fifa_sample==2, 1:ncol(scaled_fifa)-1]
 
 ```{r}
 #create y test/train variables
-fifa.trainLabels <- scaled_fifa[fifa_sample==1, 30]
-fifa.testLabels <- scaled_fifa[fifa_sample==2, 30]
+fifa.trainLabels <- scaled_fifa[fifa_sample==1, 10]
+fifa.testLabels <- scaled_fifa[fifa_sample==2, 10]
 ```
 
 ```{r, echo=FALSE}
