@@ -127,12 +127,6 @@ selectedfifa <- selectedfifa[-c(8)]
 
 ```
 
-
-```{r, echo = F,warning = F}
-#this is coder's comment
-loadPkg("leaps")
-```
-
 ```{r, echo = T,warning = F}
 #this is coder's comment
 reg.leaps <- regsubsets(y~., data = selectedfifa, nbest = 1, method = "exhaustive") 
@@ -143,26 +137,6 @@ plot(reg.leaps, scale = "Cp", main = "Cp")
 
 #Based on the Adjusted R2, the model with the adjust R2 of 0.79 with: Age, Stamina, Heading.accuracy, and Balance
 
-```{r, echo = F, warning = F}
-#this is coder's comment
-loadPkg("bestglm")
-```
-
-
-```{r, echo = T, warning = F}
-#this is coder's comment
-res.bestglm <- bestglm(Xy = selectedfifa, family = binomial,
-                       IC = "BIC",                 # Information criteria for
-                       method = "exhaustive")
-summary(res.bestglm)
-res.bestglm$BestModel
-```
-
-
-```{r, echo = F, warning = F}
-#this is coder's comment
-detach("package:bestglm", unload = T) 
-```
 
 #Here I createed another variable called goal keeper to turn y into numeric of 1 or 0
 
