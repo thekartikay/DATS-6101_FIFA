@@ -103,7 +103,7 @@ for (k in 1:15) {
   #calculate total accuracy by summing cell table proportions for correctly predicted class labels, then
   #multiplying by 100 to get %
   print(paste("k = ",k))
-  print( paste("Total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2]), 2)) )
+  print(paste("Accuracy =  ",round((Cross$prop.tbl[1,1]+Cross$prop.tbl[2,2]),2)))
 }
 ```
 #k=14 has the highest accuracy, at 89.08%
