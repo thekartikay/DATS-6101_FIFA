@@ -95,18 +95,7 @@ fifa_pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k
 IRISPREDCross <- CrossTable(fifa.testLabels, fifa_pred, prop.chisq = FALSE)
 ```
 
-```{r, echo=FALSE}
-#find best k
-for (k in 1:15) {
-  pred <- knn(train = X_train, test = X_test, cl=y_train, k=k)
-  Cross <- CrossTable(y_test, pred, prop.chisq = FALSE)
-  #calculate total accuracy by summing cell table proportions for correctly predicted class labels, then
-  #multiplying by 100 to get %
-  print(paste("k = ",k))
-  print( paste("Total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2])*100, 2),"%"   ) )
-}
-```
-#k=14 has the highest accuracy, at 95.26%
+
 
 ##Goal Keeper
 
