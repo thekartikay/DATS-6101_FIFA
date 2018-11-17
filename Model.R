@@ -67,13 +67,13 @@ summary(reg.best)
 ```
 
 ```{r}
-def_best <- def_data[,c('Age', 'Potential', 'Special', 'Balance', 'Free.kick.accuracy', 'Long.shots', 'Positioning', 'Reactions', 'Sliding.tackle', 'target')]
+def_best <- def_data[,c('Overall', 'Special', 'Crossing', 'Curve', 'Heading.accuracy', 'Long.passing', 'Long.shots', 'Marking', 'Short.passing', 'Sliding.tackle','Sprint.speed','Vision', 'target')]
 ```
 
 ```{r, echo=FALSE}
 loadPkg("FNN")
 #scale all variables, excluding target
-scaled_fifa <- as.data.frame(scale(def_best[1:9], center = TRUE, scale = TRUE))
+scaled_fifa <- as.data.frame(scale(def_best[1:12], center = TRUE, scale = TRUE))
 scaled_fifa$target <- def_best$target
 set.seed(1000)
 fifa_sample <- sample(2, nrow(scaled_fifa), replace=TRUE, prob=c(0.75, 0.25))
@@ -84,8 +84,8 @@ fifa_test <- scaled_fifa[fifa_sample==2, 1:ncol(scaled_fifa)-1]
 
 ```{r}
 #create y test/train variables
-fifa.trainLabels <- scaled_fifa[fifa_sample==1, 10]
-fifa.testLabels <- scaled_fifa[fifa_sample==2, 10]
+fifa.trainLabels <- scaled_fifa[fifa_sample==1, 13]
+fifa.testLabels <- scaled_fifa[fifa_sample==2, 13]
 ```
 
 ```{r, echo=FALSE}
