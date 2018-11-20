@@ -182,6 +182,7 @@ loadPkg("pscl")
 pR2(lmgoalkeeper)
 ```
 
+
 #the McFadden value 0.996, which means the model explains about 99.6% of the probability of being a goal keeper
 
 ```{r, echo = F}
@@ -190,6 +191,35 @@ detach("package:pscl", unload = T)
 ```
 #If I try knn selected models
 
+
+#Follow Lydia & Avi's code
+
+library(FNN)
+scaled_selectedfifa <- as.data.frame(scale(selectedfifa[1:12], center = TRUE, scale = TRUE))
+set.seed(10)
+sample <- sample(2, nrow(scaled_selectedfifa), replace=TRUE, prob=c(0.8, 0.2))
+
+scaled_training <- scaled_selectedfifa[sample==1,1:12]
+scaled_test <- scaled_selectedfifa[sample==2,1:12]
+
+trainLabels <- selectedfifa[sample==1, 13]
+testLabels <- selectedfifa[sample==2, 13]
+
+pred <- knn(train =scaled_training, test = scaled_test, cl=trainLabels, k=5)
+
+
+library(gmodels)
+predCross <- CrossTable(testLabels, pred, prop.chisq = FALSE)
+
+for (k in 1:12) {
+  pred <- knn(train = scaled_training, test = scaled_test, cl=trainLabels, k=k)
+  Cross <- CrossTable(testLabels, pred, prop.chisq = FALSE)
+  
+  print(paste("k = ",k))
+  print(paste("Accuracy = ",100*round((Cross$prop.tbl[1,1]+Cross$prop.tbl[2,2]),2), "%"))
+}
+
+#After k =5, the accuracy does not change. As such, choosing 5 features will lead to an accuracy of 0.92 or 92%. 
 
 
 
