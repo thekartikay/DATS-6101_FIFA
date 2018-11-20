@@ -192,9 +192,9 @@ detach("package:pscl", unload = T)
 #If I try knn selected models
 
 
-#Follow Lydia & Avi's code
+#Follow the professor's code
 
-library(FNN)
+loadPkg("FNN")
 scaled_selectedfifa <- as.data.frame(scale(selectedfifa[1:12], center = TRUE, scale = TRUE))
 set.seed(10)
 sample <- sample(2, nrow(scaled_selectedfifa), replace=TRUE, prob=c(0.8, 0.2))
@@ -208,18 +208,45 @@ testLabels <- selectedfifa[sample==2, 13]
 pred <- knn(train =scaled_training, test = scaled_test, cl=trainLabels, k=5)
 
 
-library(gmodels)
+loadPkg("gmodels")
 predCross <- CrossTable(testLabels, pred, prop.chisq = FALSE)
 
-for (k in 1:12) {
-  pred <- knn(train = scaled_training, test = scaled_test, cl=trainLabels, k=k)
-  Cross <- CrossTable(testLabels, pred, prop.chisq = FALSE)
+loadPkg("class")
+set.seed(10)
+#Try k =5
+
+
+chooseK = function(k, train_set, test_set, predict1, actual){
+  pred <- knn(train = train_set, test = test_set, cl=predict1, k=k)
+  Cross <- CrossTable(actual, pred, prop.chisq = FALSE)
   
-  print(paste("k = ",k))
-  print(paste("Accuracy = ",100*round((Cross$prop.tbl[1,1]+Cross$prop.tbl[2,2]),2), "%"))
+  tab = table(pred, actual)
+  accu = sum(tab[row(tab) == col(tab)]) / sum(tab)                        
+  cbind(k = k, accuracy = accu)
+  
 }
 
-#After k =5, the accuracy does not change. As such, choosing 5 features will lead to an accuracy of 0.92 or 92%. 
+knn_different_k = sapply(seq(1,24,by =2), function(x) chooseK(x,
+                                                              train_set = scaled_training,
+                                                              test_set = scaled_test,
+                                                              predict1 = trainLabels,
+                                                              actual = testLabels))
+
+
+str(knn_different_k)
+
+knn_different_k = data.frame(k = knn_different_k[1,], accuracy = knn_different_k[2,])
+
+
+loadPkg("ggplot2")
+
+ggplot(knn_different_k,
+       aes(x = k, y = accuracy)) +
+  geom_line(color = "orange", size = 1.5) +
+  geom_point(size = 3)
+
+
+#After k =5, the accuracy does not change much. As such, choosing 5 features will lead to an accuracy of 0.92 or 92%. 
 
 
 
