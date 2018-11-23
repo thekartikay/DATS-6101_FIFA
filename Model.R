@@ -248,5 +248,59 @@ ggplot(knn_different_k,
 
 #After k =5, the accuracy does not change much. As such, choosing 5 features will lead to an accuracy of 0.92 or 92%. 
 
+#Testing to predict classes
+library(readr)
+fifa <- read.csv("~/Desktop/cleanedfifa.csv")
+
+selectedfifa <- fifa[-c(1,3,6,9,44)]
+
+loadPkg("FNN")
+loadPkg("gmodels")
+
+scaled_selectedfifa <- as.data.frame(scale(selectedfifa[1:39], center = TRUE, scale = TRUE))
+
+#Sample 80% as train date and 20% as test
+set.seed(10)
+sample <- sample(2, nrow(scaled_selectedfifa), replace=TRUE, prob=c(0.8, 0.2))
+
+scaled_training <- scaled_selectedfifa[sample==1,1:39]
+scaled_test <- scaled_selectedfifa[sample==2,1:39]
+
+trainLabels <- selectedfifa[sample==1, 40]
+testLabels <- selectedfifa[sample==2, 40]
+
+loadPkg("class")
+set.seed(10)
+#Try k =5
+
+
+chooseK = function(k, train_set, test_set, predict1, actual){
+  pred <- knn(train = train_set, test = test_set, cl=predict1, k=k)
+  Cross <- CrossTable(actual, pred, prop.chisq = FALSE)
+  
+  tab = table(pred, actual)
+  accu = sum(tab[row(tab) == col(tab)]) / sum(tab)                        
+  cbind(k = k, accuracy = accu)
+  
+}
+
+knn_different_k = sapply(seq(1,24,by =2), function(x) chooseK(x,
+                                                              train_set = scaled_training,
+                                                              test_set = scaled_test,
+                                                              predict1 = trainLabels,
+                                                              actual = testLabels))
+
+
+str(knn_different_k)
+
+knn_different_k = data.frame(k = knn_different_k[1,], accuracy = knn_different_k[2,])
+
+
+loadPkg("ggplot2")
+
+ggplot(knn_different_k,
+       aes(x = k, y = accuracy)) +
+  geom_line(color = "orange", size = 1.5) +
+  geom_point(size = 3)
 
 
