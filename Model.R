@@ -151,44 +151,7 @@ summary(lmgoalkeeper)
 ```
 
 
-#a) Hoslem and Lemeshow goodness-of-fit (GOF) test.
-```{r, echo = T}
-#this is coder's comment
-loadPkg("ResourceSelection")
-hoslem.test(selectedfifa$goalkeeper, fitted(lmgoalkeeper)) 
-detach("package:ResourceSelection", unload = T) 
-```
-#pvalue is small => significant
 
-```{r, echo = T}
-#this is coder's comment
-loadPkg("pROC")
-prob=predict(lmgoalkeeper, type = c("response"))
-selectedfifa$prob=prob
-h <- roc(y~prob, data=selectedfifa)
-auc(h)
-plot(h)
-detach("package:pROC", unload = T) 
-```
-#the area is 1, which is very good.
-
-#c) The McFadden statistics.
-```{r, echo = F}
-#this is coder's comment
-loadPkg("pscl") 
-```
-
-```{r, echo = T}
-pR2(lmgoalkeeper)
-```
-
-
-#the McFadden value 0.996, which means the model explains about 99.6% of the probability of being a goal keeper
-
-```{r, echo = F}
-#this is coder's comment
-detach("package:pscl", unload = T)
-```
 #If I try knn selected models
 
 
