@@ -453,3 +453,7 @@ accuracy = round((sum(data$Player.Mentality == data$predicted)) / nrow(data) * 1
 paste("Logistic Regression Accuracy:", accuracy, '%')
 ```
 
+```{r, echo=FALSE}
+library(gmodels)
+CrossTable(data$Player.Mentality, data$predicted)
+```
