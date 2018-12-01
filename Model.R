@@ -325,14 +325,14 @@ summary(glm_keeper)
 
 ```{r, echo=FALSE}
 glm_keeper_probs = data.frame(probs = predict(glm_keeper, newdata = fifa_test, type="response"))
-glm_keeper_probs
+head(glm_keeper_probs)
 ```
 
 ```{r}
 glm_pred = glm_keeper_probs %>% mutate(pred_keeper = ifelse(probs>.5, "keeper", "other"))
 
 fifa_test = cbind(fifa_test, glm_pred)
-fifa_test
+head(fifa_test)
 ```
 
 ```{r}
@@ -368,14 +368,14 @@ summary(glm_defence)
 
 ```{r, echo=FALSE}
 glm_defence_probs = data.frame(probs = predict(glm_defence, newdata = fifa_test, type="response"))
-glm_defence_probs
+head(glm_defence_probs)
 ```
 
 ```{r}
 glm_pred = glm_defence_probs %>% mutate(pred_defence = ifelse(probs>.5, "defence", "other"))
 
 fifa_test = cbind(fifa_test, glm_pred)
-fifa_test
+head(fifa_test)
 ```
 
 ```{r}
@@ -411,14 +411,14 @@ summary(glm_attack)
 
 ```{r, echo=FALSE}
 glm_attack_probs = data.frame(probs = predict(glm_attack, newdata = fifa_test, type="response"))
-glm_attack_probs
+head(glm_attack_probs)
 ```
 
 ```{r}
 glm_pred = glm_attack_probs %>% mutate(pred_attack = ifelse(probs>.5, "attack", "mid"))
 
 fifa_test = cbind(fifa_test, glm_pred)
-fifa_test
+head(fifa_test)
 ```
 
 ```{r, echo=FALSE}
