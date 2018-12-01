@@ -45,65 +45,63 @@ fifa <- read.csv("~/Desktop/fifa.csv")
 ```
 
 ```{r, echo=FALSE}
-#select variables of interest
-def_data <- fifa[,c('Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'Agility', 'Balance', 'Ball.control', 'Composure', 'Crossing', 'Curve', 'Dribbling',  'Free.kick.accuracy', 'Heading.accuracy', 'Interceptions', 'Long.passing', 'Long.shots', 'Marking',  'Positioning', 'Reactions', 'Short.passing', 'Shot.power', 'Sliding.tackle', 'Sprint.speed', 'Stamina', 'Standing.tackle', 'Strength', 'Vision', 'Volleys', 'Player.Mentality')]
+def_data <- fifa[,c('Age', 'Potential', 'Acceleration', 'Agility', 'Balance', 'Ball.control', 'Composure', 'Crossing', 'Curve', 'Dribbling',  'Free.kick.accuracy', 'Heading.accuracy', 'Interceptions', 'Long.passing', 'Long.shots', 'Marking',  'Positioning', 'Reactions', 'Short.passing', 'Shot.power', 'Sliding.tackle', 'Sprint.speed', 'Stamina', 'Standing.tackle', 'Strength', 'Vision', 'Volleys', 'Player.Mentality')]
+```
+
+```{r, echo=FALSE}
+def_data$defence[fifa$Player.Mentality=='defence'] <- 'defence'
+def_data$defence[fifa$Player.Mentality!='defence'] <- 'other'
 ```
 
 ```{r, echo = FALSE}
-#create target variable from encoded Player Mentality variable
-def_data$target[fifa$Player.Mentality=='defence'] <- 1
-def_data$target[fifa$Player.Mentality!='defence'] <- 0
-#delete Player Mentality column
+def_data$target[def_data$defence=='defence'] <- 1
+def_data$target[def_data$defence=='other'] <- 0
 def_data$Player.Mentality <- NULL
 ```
 
 ```{r, echo=FALSE}
 loadPkg("leaps")
-reg.best <- regsubsets(target~., data = def_data, nvmax = 10, method="exhaustive")
+reg.best <- regsubsets(target~. - defence, data = def_data, nbest=2, nvmax = 10, method="exhaustive")
 plot(reg.best, scale = "adjr2", main = "Adjusted R^2")
 plot(reg.best, scale = "bic", main = "BIC")
 plot(reg.best, scale = "Cp", main = "Cp")
 summary(reg.best)
 ```
 
-```{r}
-def_best <- def_data[,c('Crossing', 'Curve', 'Heading.accuracy', 'Long.passing', 'Long.shots', 'Marking', 'Short.passing', 'Sliding.tackle','Sprint.speed','Vision', 'target')]
+```{r, echo=FALSE}
+def_best <- def_data[,c('Crossing', 'Curve', 'Heading.accuracy', 'Long.passing', 'Long.shots', 'Marking', 'Short.passing', 'Sliding.tackle','Sprint.speed','Vision', 'defence', 'target')]
 ```
+
 
 ```{r, echo=FALSE}
 loadPkg("FNN")
-#scale all variables, excluding target
 scaled_fifa <- as.data.frame(scale(def_best[1:10], center = TRUE, scale = TRUE))
 scaled_fifa$target <- def_best$target
 set.seed(1000)
 fifa_sample <- sample(2, nrow(scaled_fifa), replace=TRUE, prob=c(0.75, 0.25))
-#create test/train outputs
 fifa_training <- scaled_fifa[fifa_sample==1, 1:ncol(scaled_fifa)-1]
 fifa_test <- scaled_fifa[fifa_sample==2, 1:ncol(scaled_fifa)-1]
 ```
 
-```{r}
-#create y test/train variables
+```{r, echo=FALSE}
 fifa.trainLabels <- scaled_fifa[fifa_sample==1, 11]
 fifa.testLabels <- scaled_fifa[fifa_sample==2, 11]
+fifa.trainLabels
 ```
 
 ```{r, echo=FALSE}
-loadPkg("gmodels")
-#test model with k=6
 fifa_pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k=6)
+
+loadPkg("gmodels")
 IRISPREDCross <- CrossTable(fifa.testLabels, fifa_pred, prop.chisq = FALSE)
 ```
 
 ```{r, echo=FALSE}
-#find best k
 for (k in 1:15) {
   pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k=k)
   Cross <- CrossTable(fifa.testLabels, pred, prop.chisq = FALSE)
-  #calculate total accuracy by summing cell table proportions for correctly predicted class labels, then
-  #multiplying by 100 to get %
   print(paste("k = ",k))
-  print(paste("Accuracy =  ",round((Cross$prop.tbl[1,1]+Cross$prop.tbl[2,2]),2)))
+  print( paste("Total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2]), 2)) )
 }
 ```
 #k=6 or 7 have the highest accuracy, at 95%
