@@ -6,118 +6,34 @@ loadPkg = function(x) { if (!require(x,character.only=T, quietly =T)) { install.
 ```
 
 
-#Slide 4
-
-##Defense
+#Load the file
 
 ```{r, echo=FALSE}
 library("readxl")
 #read in fifa csv file
-fifa <- read.csv("~/Desktop/fifa.csv")
+fifa <- read.csv("~/Desktop/fifa.csv") # REMEMBER TO CHANGE THE DIRECTORY
 ```
+#Load all the packages
 
-```{r, echo=FALSE}
-def_data <- fifa[,c('Age', 'Potential', 'Acceleration', 'Agility', 'Balance', 'Ball.control', 'Composure', 'Crossing', 'Curve', 'Dribbling',  'Free.kick.accuracy', 'Heading.accuracy', 'Interceptions', 'Long.passing', 'Long.shots', 'Marking',  'Positioning', 'Reactions', 'Short.passing', 'Shot.power', 'Sliding.tackle', 'Sprint.speed', 'Stamina', 'Standing.tackle', 'Strength', 'Vision', 'Volleys', 'Player.Mentality')]
-```
-
-```{r, echo=FALSE}
-def_data$defence[fifa$Player.Mentality=='defence'] <- 'defence'
-def_data$defence[fifa$Player.Mentality!='defence'] <- 'other'
-```
-
-```{r, echo = FALSE}
-def_data$target[def_data$defence=='defence'] <- 1
-def_data$target[def_data$defence=='other'] <- 0
-def_data$Player.Mentality <- NULL
-```
-
-```{r, echo=FALSE}
+```{r}
 loadPkg("leaps")
-reg.best <- regsubsets(target~. - defence, data = def_data, nbest=2, nvmax = 10, method="exhaustive")
-plot(reg.best, scale = "adjr2", main = "Adjusted R^2")
-plot(reg.best, scale = "bic", main = "BIC")
-plot(reg.best, scale = "Cp", main = "Cp")
-summary(reg.best)
-```
-
-```{r, echo=FALSE}
-def_best <- def_data[,c('Crossing', 'Curve', 'Heading.accuracy', 'Long.passing', 'Long.shots', 'Marking', 'Short.passing', 'Sliding.tackle','Sprint.speed','Vision', 'defence', 'target')]
-```
-
-
-```{r, echo=FALSE}
 loadPkg("FNN")
-scaled_fifa <- as.data.frame(scale(def_best[1:10], center = TRUE, scale = TRUE))
-scaled_fifa$target <- def_best$target
-set.seed(1000)
-fifa_sample <- sample(2, nrow(scaled_fifa), replace=TRUE, prob=c(0.75, 0.25))
-fifa_training <- scaled_fifa[fifa_sample==1, 1:ncol(scaled_fifa)-1]
-fifa_test <- scaled_fifa[fifa_sample==2, 1:ncol(scaled_fifa)-1]
-```
-
-```{r, echo=FALSE}
-fifa.trainLabels <- scaled_fifa[fifa_sample==1, 11]
-fifa.testLabels <- scaled_fifa[fifa_sample==2, 11]
-fifa.trainLabels
-```
-
-```{r, echo=FALSE}
-fifa_pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k=6)
-
 loadPkg("gmodels")
-IRISPREDCross <- CrossTable(fifa.testLabels, fifa_pred, prop.chisq = FALSE)
+loadPkg("ggplot2")
+loadPkg("class")
 ```
 
-```{r, echo=FALSE}
-for (k in 1:15) {
-  pred <- knn(train = fifa_training, test = fifa_test, cl=fifa.trainLabels, k=k)
-  Cross <- CrossTable(fifa.testLabels, pred, prop.chisq = FALSE)
-  print(paste("k = ",k))
-  print( paste("Total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2]), 2)) )
-}
-```
-#k=6 or 7 have the highest accuracy, at 95%
+
+#Slide 4
+
+##Defense
+
 
 
 ##Mid-field
 
 
-#Read the file
-data <- data.read('cleanedFifa.csv')
-data_sub <- data[,c('Overall', 'Potential', 'Balance', 'Ball.control', 'Composure', 
-                    'Crossing', 'Curve', 'Dribbling', 'Finishing', 'Free.kick.accuracy', 
-                    'Marking', 'Penalties', 'Positioning', 'Reactions', 'Short.passing', 
-                    'Shot.power','Sliding.tackle', 'Sprint.speed', 'Stamina', 'Standing.tackle', 
-                    'Strength', 'Vision', 'Volleys', 'Player.Mentality')]
-#Creating the target variable
-data_sub$target[data$Player.Mentality=='mid'] <- 1
-data_sub$target[data$Player.Mentality!='mid'] <- 0
-
-#Engineering the data,i.e, feature scaling and test-train split
-randomize <- sample(2, nrow(data_sub), replace=TRUE, prob=c(0.8, 0.2))
-scaled_fifa <- as.data.frame(scale(data_sub[1:23], center = TRUE, scale = TRUE))
-scaled_fifa$target <- data_sub$target
-X_train <- scaled_fifa[randomize==1,1:ncol(scaled_fifa)-1]
-X_test <- scaled_fifa[randomize==2,1:ncol(scaled_fifa)-1]
-y_train <- scaled_fifa[randomize==1,ncol(scaled_fifa)]
-y_test <- scaled_fifa[randomize==2,ncol(scaled_fifa)]
-
-#Create KNN classification model
-library("FNN")
-pred <- knn(train = X_train[1:2], test = X_test[1:2], cl=y_train, k=6)
-
-#Parameter tuning to figure out the best value of k
-for (kv in 2:11) {
-  print(paste("******* k = ",kv," ***************************" ))
-  pred <- knn(train = X_train, test = X_test, cl=y_train, k=kv)
-  Cross <- CrossTable(y_test, pred, prop.chisq = FALSE)
-  print( paste("total accuracy =  ",round( (Cross$prop.tbl[1,1] + Cross$prop.tbl[2,2])*100, 2),"%"   ) )
-}
-
-
 #Slide 5
-
-
 
 
 
@@ -128,11 +44,6 @@ for (kv in 2:11) {
 #Logistic Regression Model
                          
 #Analysis
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-loadPkg = function(x) { if (!require(x,character.only=T, quietly =T)) { install.packages(x,dep=T,repos="http://cran.us.r-project.org"); if(!require(x,character.only=T)) stop("Package not found") } }
-```
 
 
 ```{r, echo=FALSE}
@@ -345,7 +256,7 @@ scaled_test <- scaled_selectedfifa[sample==2,1:39]
 trainLabels <- selectedfifa[sample==1, 40]
 testLabels <- selectedfifa[sample==2, 40]
 
-loadPkg("class")
+
 set.seed(10)
 #Try k =5
 
